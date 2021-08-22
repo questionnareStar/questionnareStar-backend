@@ -37,7 +37,7 @@ public class CreateQuestionReq {
     private Integer sequence;
 
     @ApiModelProperty(value = "问题次序")
-    private Integer Questionnaire;
+    private Integer questionnaire;
 
 
 }

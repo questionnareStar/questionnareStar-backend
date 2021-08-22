@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -35,10 +37,12 @@ public class CreateQuestionnaireReq  implements Serializable {
 
     @NotNull(message = "问卷开始收集时间不能为空")
     @ApiModelProperty(value = "问卷开始收集时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
     @NotNull(message = "问卷结束收集时间不能为空")
     @ApiModelProperty(value = "问卷结束收集时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     @NotNull(message = "是否立即发布？")

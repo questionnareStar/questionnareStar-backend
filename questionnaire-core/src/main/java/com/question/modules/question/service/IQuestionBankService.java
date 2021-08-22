@@ -16,7 +16,7 @@ public interface IQuestionBankService extends IService<QuestionBank> {
 
     boolean deleteByIdAndTypeWhenCreating(Integer id, Integer type);
 
-    boolean deleteByIdAndTypeWhenEditing(Integer id, Integer type);
+    boolean deleteByQuestionnaireIdAndSequence(Integer questionnaireId, Integer sequence);
 
     Boolean createQuestionWhenEditing(CreateQuestionReq req);
 }

@@ -1,7 +1,6 @@
 package com.question.modules.question.service.impl;
 
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.question.modules.question.common.ChoiceConvertUtil;
@@ -47,7 +46,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
                 FillBlank fillBlank = new FillBlank();
                 fillBlank.setQuestion(req.getQuestion());
                 fillBlank.setIsDeleted(false);
-                fillBlank.setRequired(false);
+                fillBlank.setRequired(req.getRequired());
                 fillBlankService.save(fillBlank);
                 return fillBlank.getId();
             }
@@ -56,7 +55,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
                 mark.setMaxScore(req.getMaxScore());
                 mark.setQuestion(req.getQuestion());
                 mark.setIsDeleted(false);
-                mark.setRequired(false);
+                mark.setRequired(req.getRequired());
                 markService.save(mark);
                 return mark.getId();
             }
@@ -65,7 +64,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
                 multiChoice.setQuestion(req.getQuestion());
                 multiChoice.setChoices(ChoiceConvertUtil.ChoicesToString(req.getChoices()));
                 multiChoice.setIsDeleted(false);
-                multiChoice.setRequired(false);
+                multiChoice.setRequired(req.getRequired());
                 multiChoiceService.save(multiChoice);
                 return multiChoice.getId();
             }
@@ -74,7 +73,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
                 singleChoice.setQuestion(req.getQuestion());
                 singleChoice.setChoices(ChoiceConvertUtil.ChoicesToString(req.getChoices()));
                 singleChoice.setIsDeleted(false);
-                singleChoice.setRequired(false);
+                singleChoice.setRequired(req.getRequired());
                 singleChoiceService.save(singleChoice);
                 return singleChoice.getId();
             }
@@ -91,47 +90,60 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         List<QuestionBank> questionBanks = questionBankMapper.selectList(wrapper);
         questionBanks.forEach(questionBank -> {
             questionBank.setSequence(questionBank.getSequence()+1);
-            save(questionBank);
+            updateById(questionBank);
         });
         //插入新的问题
+        int topic_id = -1;
         switch (req.getType()){
             case 1:{
                 FillBlank fillBlank = new FillBlank();
                 fillBlank.setQuestion(req.getQuestion());
                 fillBlank.setIsDeleted(false);
-                fillBlank.setRequired(false);
+                fillBlank.setRequired(req.getRequired());
                 fillBlankService.save(fillBlank);
-                return true;
+                topic_id = fillBlank.getId();
+                break;
             }
             case 2:{
                 Mark mark = new Mark();
                 mark.setMaxScore(req.getMaxScore());
                 mark.setQuestion(req.getQuestion());
                 mark.setIsDeleted(false);
-                mark.setRequired(false);
+                mark.setRequired(req.getRequired());
                 markService.save(mark);
-                return true;
+                topic_id = mark.getId();
+                break;
             }
             case 3:{
                 MultiChoice multiChoice = new MultiChoice();
                 multiChoice.setQuestion(req.getQuestion());
                 multiChoice.setChoices(ChoiceConvertUtil.ChoicesToString(req.getChoices()));
                 multiChoice.setIsDeleted(false);
-                multiChoice.setRequired(false);
+                multiChoice.setRequired(req.getRequired());
                 multiChoiceService.save(multiChoice);
-                return true;
+                topic_id = multiChoice.getId();
+                break;
             }
             case 4:{
                 SingleChoice singleChoice = new SingleChoice();
                 singleChoice.setQuestion(req.getQuestion());
                 singleChoice.setChoices(ChoiceConvertUtil.ChoicesToString(req.getChoices()));
                 singleChoice.setIsDeleted(false);
-                singleChoice.setRequired(false);
+                singleChoice.setRequired(req.getRequired());
                 singleChoiceService.save(singleChoice);
-                return true;
+                topic_id = singleChoice.getId();
+                break;
             }
-            default:return false;
+            default:
+                return false;
         }
+        QuestionBank questionBank = new QuestionBank();
+        questionBank.setSequence(req.getSequence());
+        questionBank.setQuestionnaireId(req.getQuestionnaire());
+        questionBank.setTopicId(topic_id);
+        questionBank.setType(req.getType());
+        save(questionBank);
+        return true;
     }
 
     @Override
@@ -140,12 +152,25 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
     }
 
     @Override
-    public boolean deleteByIdAndTypeWhenEditing(Integer id, Integer type) {
-        if(deleteByIdAndType(id, type)){
-            QueryWrapper<QuestionBank> wrapper = new QueryWrapper<>();
-            wrapper.eq("type",type);
-            wrapper.eq("topic_id",id);
-            return remove(wrapper);
+    public boolean deleteByQuestionnaireIdAndSequence(Integer questionnaireId, Integer sequence) {
+        //1. 找到该问题
+        QueryWrapper<QuestionBank> wrapper = new QueryWrapper<>();
+        wrapper.eq("questionnaire_id",questionnaireId);
+        wrapper.eq("sequence",sequence);
+        QuestionBank targetQuestionBank = getOne(wrapper);
+        //2. 将顺序在该问题之后的该问卷的问题全部前移
+        wrapper = new QueryWrapper<QuestionBank>();
+        wrapper.eq("questionnaire_id",questionnaireId);
+        wrapper.gt("sequence",sequence);
+        List<QuestionBank> questionBanks = questionBankMapper.selectList(wrapper);
+        questionBanks.forEach(questionBank -> {
+            questionBank.setSequence(questionBank.getSequence()-1);
+            updateById(questionBank);
+        });
+        //3. 删除问题
+        if(deleteByIdAndType(targetQuestionBank.getTopicId(),targetQuestionBank.getType())){
+            //4. 删除题库表对应的项
+            return removeById(targetQuestionBank);
         }
         return false;
     }
