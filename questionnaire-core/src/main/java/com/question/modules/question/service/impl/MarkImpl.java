@@ -8,8 +8,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MarkImpl extends ServiceImpl<MarkMapper, Mark> implements IMarkService {
-    @Override
-    public Integer InsertMark(Mark mark) {
-        return baseMapper.insert(mark);
-    }
 }

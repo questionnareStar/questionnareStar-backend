@@ -8,8 +8,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MultiChoiceImpl extends ServiceImpl<MultiChoiceMapper, MultiChoice> implements IMultiChoiceService {
-    @Override
-    public Integer InsertMultiChoice(MultiChoice multiChoice) {
-        return baseMapper.insert(multiChoice);
-    }
 }

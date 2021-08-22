@@ -31,10 +31,10 @@ public class FillBlank implements Serializable {
     private String question;
 
     @ApiModelProperty(value = "是否为必填 0false 1true 1表示必填")
-    private boolean required;
+    private Boolean required;
 
     @ApiModelProperty(value = "是否删除  0false 1true 1表示删除")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
 
 }

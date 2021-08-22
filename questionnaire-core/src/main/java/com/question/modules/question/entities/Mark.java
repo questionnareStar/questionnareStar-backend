@@ -23,9 +23,6 @@ public class Mark implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @ApiModelProperty(value = "问卷id")
-    private Integer questionnaire;
-
     @ApiModelProperty(value = "问题")
     private String question;
 
@@ -34,7 +31,8 @@ public class Mark implements Serializable {
 
     @ApiModelProperty(value = "是否必填")
     private Boolean required;
+
     @ApiModelProperty(value = "是否删除，1正常 0删除 -1锁定")
-    private Integer isDeleted;
+    private Boolean isDeleted;
 
 }

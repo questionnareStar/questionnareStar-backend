@@ -10,5 +10,4 @@ import com.question.modules.question.entities.FillBlank;
  * @since 2021-08-21
  */
 public interface IFillBlankService extends IService<FillBlank> {
-
 }

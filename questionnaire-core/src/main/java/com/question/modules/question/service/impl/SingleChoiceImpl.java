@@ -14,7 +14,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SingleChoiceImpl extends ServiceImpl<SingleChoiceMapper, SingleChoice> implements ISingleChoiceService {
-    public Integer InsertSingleChoice(SingleChoice singleChoice){
-        return baseMapper.insert(singleChoice);
-    }
 }

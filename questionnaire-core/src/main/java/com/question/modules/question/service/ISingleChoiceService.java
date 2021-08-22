@@ -1,5 +1,6 @@
 package com.question.modules.question.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.question.modules.question.entities.SingleChoice;
 
 /**
@@ -10,6 +11,5 @@ import com.question.modules.question.entities.SingleChoice;
  * @author 问卷星球团队
  * @since 2021-08-20
  */
-public interface ISingleChoiceService {
-    Integer InsertSingleChoice(SingleChoice singleChoice);
+public interface ISingleChoiceService extends IService<SingleChoice> {
 }
