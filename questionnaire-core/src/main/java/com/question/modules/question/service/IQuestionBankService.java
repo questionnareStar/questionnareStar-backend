@@ -1,5 +1,6 @@
 package com.question.modules.question.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.question.modules.question.entities.QuestionBank;
 import com.question.modules.question.entities.req.CreateQuestionReq;
@@ -12,11 +13,13 @@ import com.question.modules.question.entities.req.CreateQuestionReq;
  */
 public interface IQuestionBankService extends IService<QuestionBank> {
 
-    Integer createQuestion(CreateQuestionReq req);
+//    Integer createQuestion(CreateQuestionReq req);
 
     boolean deleteByIdAndTypeWhenCreating(Integer id, Integer type);
 
     boolean deleteByQuestionnaireIdAndSequence(Integer questionnaireId, Integer sequence);
 
-    Boolean createQuestionWhenEditing(CreateQuestionReq req);
+//    Boolean createQuestionWhenEditing(CreateQuestionReq req);
+
+    JSONObject createQuestionnaireStatic(Integer questionnaireId);
 }

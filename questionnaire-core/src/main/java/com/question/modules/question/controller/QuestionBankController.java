@@ -17,16 +17,16 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Transactional
-@RequestMapping("/question-bank")
+@RequestMapping("/api/v1/question-bank")
 public class QuestionBankController {
     @Autowired
     private IQuestionBankService questionBankService;
 
-    @ApiOperation("创建问卷时新建问题，无需考虑问题次序，不用传参")
-    @PostMapping("/creating/create")
-    public Integer createQuestionWhenCreating(@RequestBody @Validated CreateQuestionReq req) {
-        return questionBankService.createQuestion(req);
-    }
+//    @ApiOperation("创建问卷时新建问题，无需考虑问题次序，不用传参")
+//    @PostMapping("/creating/create")
+//    public Integer createQuestionWhenCreating(@RequestBody @Validated CreateQuestionReq req) {
+//        return questionBankService.createQuestion(req);
+//    }
 
     @ApiOperation("创建问卷时删除问题")
     @DeleteMapping("/creating/delete")
@@ -34,11 +34,11 @@ public class QuestionBankController {
         return questionBankService.deleteByIdAndTypeWhenCreating(id,type);
     }
 
-    @ApiOperation("编辑问卷时新建问题，若插入在中间，则后面的问题顺序自动后移")
-    @PostMapping("/editing/create")
-    public Boolean createQuestionWhenEditing(@RequestBody @Validated CreateQuestionReq req) {
-        return questionBankService.createQuestionWhenEditing(req);
-    }
+//    @ApiOperation("编辑问卷时新建问题，若插入在中间，则后面的问题顺序自动后移")
+//    @PostMapping("/editing/create")
+//    public Boolean createQuestionWhenEditing(@RequestBody @Validated CreateQuestionReq req) {
+//        return questionBankService.createQuestionWhenEditing(req);
+//    }
 
     @ApiOperation("编辑问卷时删除问题，若问题在中间，则后面的问题顺序自动后移")
     @DeleteMapping("/editing/delete")
